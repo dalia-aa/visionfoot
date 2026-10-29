@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>تقرير فحص VisionFoot</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one narrow clinical report card, phone-first, sections stacked */
+:root{
+  --bg:#eef3f1; --card:#ffffff; --ink:#14272b; --muted:#5b706c; --line:#d9e3e0;
+  --brand:#1e3d37; --teal:#1d6b73; --gold:#c98a1b;
+  --urgent:#b3261e; --urgent-bg:#fbe9e7; --soon:#b4570f; --soon-bg:#fdf0e3;
+  --watch:#1d5fa8; --watch-bg:#e7f0fb; --ok:#2e7d4f; --ok-bg:#e6f4ec;
+  --font:"IBM Plex Sans Arabic",system-ui,"Segoe UI",Tahoma,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1716; --card:#162321; --ink:#e3eeeb; --muted:#97aba7; --line:#2a3a37;
+  --brand:#7fc7b8; --teal:#5fb3bb; --gold:#e0a84a;
+  --urgent:#ff8a80; --urgent-bg:#3a1c1a; --soon:#f6ad6b; --soon-bg:#382717; --watch:#8ab8f0; --watch-bg:#172a40; --ok:#7fd3a0; --ok-bg:#16301f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1716; --card:#162321; --ink:#e3eeeb; --muted:#97aba7; --line:#2a3a37;
+  --brand:#7fc7b8; --teal:#5fb3bb; --gold:#e0a84a;
+  --urgent:#ff8a80; --urgent-bg:#3a1c1a; --soon:#f6ad6b; --soon-bg:#382717; --watch:#8ab8f0; --watch-bg:#172a40; --ok:#7fd3a0; --ok-bg:#16301f; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);direction:rtl;line-height:1.75;font-size:16px;
+  padding-block:20px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:700;font-size:20px;color:var(--brand);direction:ltr}
+.brand span{color:var(--gold)}
+.tag{font-size:13px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.example{font-size:13px;background:var(--soon-bg);color:var(--soon);border-radius:10px;padding:8px 12px}
+.result{border-top:6px solid var(--c)}
+.label{font-size:13px;color:var(--muted);margin:0}
+h1{font-size:24px;margin:2px 0 0;line-height:1.4;text-wrap:balance}
+.code{direction:ltr;display:inline-block;font-weight:700;color:var(--c);font-size:15px;letter-spacing:.04em}
+.prio{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:4px 12px;border-radius:999px;font-weight:600;font-size:14px;background:var(--cbg);color:var(--c)}
+.conf{margin-top:16px}
+.conf-row{display:flex;justify-content:space-between;align-items:baseline}
+.pct{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--c)}
+.bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--c);border-radius:99px}
+.hint{font-size:13px;color:var(--muted);margin:6px 0 0}
+h2{font-size:17px;margin:0 0 8px;color:var(--brand)}
+ul,ol{margin:0;padding-inline-start:22px}
+li{margin:4px 0}
+.doctor{background:var(--cbg);border:1px solid var(--c);border-radius:14px;padding:16px}
+.doctor h2{color:var(--c)}
+.alarm li::marker{color:var(--urgent)}
+.btns{display:flex;flex-wrap:wrap;gap:10px}
+.btn{flex:1 1 200px;display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:46px;border-radius:12px;font:inherit;font-weight:600;font-size:15px;text-decoration:none;cursor:pointer;border:1px solid var(--teal)}
+.btn.primary{background:var(--teal);color:#fff}
+.btn.ghost{background:transparent;color:var(--teal)}
+.btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.copyfield{width:100%;margin-top:8px;font:inherit;font-size:13px;direction:ltr;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.foot{font-size:12.5px;color:var(--muted);line-height:1.7}
+.meta{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+
+<div class="wrap" id="app">
+  <div class="top">
+    <div class="brand">Vision<span>Foot</span></div>
+    <div class="tag">تقرير فحص أولي للقدم</div>
+  </div>
+  <div class="example" id="example" hidden>هذا مثال توضيحي. امسح رمز QR من شاشة جهاز VisionFoot ليظهر تقرير الفحص الفعلي.</div>
+
+  <section class="card result" id="result">
+    <p class="label">نتيجة التصنيف</p>
+    <h1 id="name"></h1>
+    <span class="code" id="code"></span>
+    <div><span class="prio" id="prio"></span></div>
+    <div class="conf">
+      <div class="conf-row"><span class="label">نسبة الثقة</span><span class="pct" id="pct"></span></div>
+      <div class="bar"><i id="bar"></i></div>
+      <p class="hint">نسبة الثقة تعني مدى تأكد النموذج من الفئة، وليست نسبة خطورة الجرح.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>ماذا تعني النتيجة؟</h2>
+    <p id="meaning" style="margin:0"></p>
+  </section>
+
+  <section class="card">
+    <h2>ماذا تفعل الآن؟</h2>
+    <ol id="todo"></ol>
+  </section>
+
+  <section class="doctor" id="doctor">
+    <h2 id="docTitle"></h2>
+    <p id="docText" style="margin:0"></p>
+  </section>
+
+  <section class="card">
+    <h2>توجّه للطوارئ فورًا إذا ظهر أي مما يلي</h2>
+    <ul class="alarm">
+      <li>احمرار يمتد حول الجرح، أو تورم أو سخونة في القدم.</li>
+      <li>صديد أو رائحة كريهة من الجرح.</li>
+      <li>حمّى أو قشعريرة.</li>
+      <li>اسوداد الجلد أو برودة القدم وتغير لونها.</li>
+      <li>ألم شديد مفاجئ، أو ارتفاع شديد في سكر الدم.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>أرسل التقرير للطبيب</h2>
+    <div class="btns">
+      <a class="btn primary" id="wa" target="_blank" rel="noopener">إرسال عبر واتساب</a>
+      <button class="btn ghost" id="copy" type="button">نسخ رابط التقرير</button>
+    </div>
+    <input class="copyfield" id="link" readonly hidden aria-label="رابط التقرير">
+  </section>
+
+  <div class="meta"><span id="when"></span><span>الجهاز: VisionFoot · يعمل دون إنترنت ولا يحفظ الصور</span></div>
+  <p class="foot">هذا التقرير صادر عن أداة فرز أولي تعمل بالذكاء الاصطناعي على جهاز VisionFoot، وليس تشخيصًا طبيًا نهائيًا ولا يغني عن الفحص السريري. دقة النموذج المرجعي في الاختبار ٨٨٫٦٪، ودقة النموذج المدمج داخل الجهاز ٧٥٫٨٪، لذا قد تكون النتيجة غير صحيحة. التشخيص النهائي والقرار العلاجي للطبيب المختص. مشروع تخرج: داليا أحمد الظلماني، الكلية التقنية الرقمية للبنات بالرياض.</p>
+</div>
+
+<script>
+const AR = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+const DATA = {
+  D: { name:'قرحة القدم السكري', code:'DFU', prio:'عاجل: راجع الطبيب خلال ٢٤ ساعة', c:'--urgent', cbg:'--urgent-bg',
+    meaning:'تشير الصورة إلى قرحة في قدم مريض السكري، وهي جرح مفتوح يتأخر التئامه بسبب ضعف الإحساس والدورة الدموية. إهمالها قد يؤدي إلى التهاب شديد يصل إلى العظم أو إلى البتر، والتدخل المبكر يقلل هذا الخطر كثيرًا.',
+    todo:['راجع الطبيب أو عيادة القدم السكري خلال ٢٤ ساعة، ولا تنتظر حتى يزيد الألم؛ فضعف الإحساس قد يخفي شدة الجرح.','خفّف المشي والوقوف على القدم المصابة قدر الإمكان.','غطِّ الجرح بضماد نظيف وجاف، ولا تضع عليه أي خلطات أو علاجات منزلية.','تابع قياس سكر الدم والتزم بأدوية السكري كما وصفها الطبيب.','افحص القدم يوميًا وسجّل أي تغير في حجم الجرح أو لونه.'],
+    docTitle:'يجب التوجه للطبيب', docText:'هذه النتيجة تحتاج تقييمًا طبيًا عاجلًا. اعرض هذا التقرير على الطبيب ليؤكد التشخيص ويحدد العلاج المناسب.'},
+  V: { name:'قرحة وريدية', code:'VLU', prio:'مراجعة الطبيب خلال أيام', c:'--soon', cbg:'--soon-bg',
+    meaning:'تشير الصورة إلى قرحة وريدية، وهي جرح يظهر غالبًا أسفل الساق أو حول الكاحل بسبب ضعف رجوع الدم في الأوردة. تلتئم ببطء وقد تتكرر إذا لم يُعالج السبب.',
+    todo:['راجع الطبيب خلال أيام لتقييم الدورة الوريدية وتحديد العلاج.','ارفع الساق فوق مستوى القلب عند الجلوس أو الاستلقاء.','حافظ على نظافة الجرح وغطِّه بضماد نظيف.','لا تستخدم الجوارب أو الأربطة الضاغطة إلا بتوجيه الطبيب.','تحرّك وامشِ بانتظام، وتجنّب الوقوف أو الجلوس الطويل دون حركة.'],
+    docTitle:'يُنصح بمراجعة الطبيب', docText:'القرحة الوريدية تحتاج علاجًا للسبب حتى تلتئم ولا تتكرر. اعرض هذا التقرير على الطبيب.'},
+  S: { name:'جرح جراحي', code:'SW', prio:'متابعة الالتئام', c:'--watch', cbg:'--watch-bg',
+    meaning:'تشير الصورة إلى جرح ناتج عن عملية جراحية. يحتاج متابعة حتى يلتئم، مع الانتباه لعلامات العدوى.',
+    todo:['اتبع تعليمات الفريق الجراحي في تغيير الضماد ومواعيده.','أبقِ الجرح نظيفًا وجافًا.','راقب يوميًا: الاحمرار، والتورم، والإفرازات، وانفتاح حواف الجرح.','احضر موعد المتابعة مع الطبيب في وقته.'],
+    docTitle:'المتابعة مع الطبيب', docText:'راجع الطبيب في موعد المتابعة، أو قبله فورًا إذا ظهرت علامات العدوى المذكورة أدناه.'},
+  N: { name:'قدم سليمة', code:'NF', prio:'لا توجد علامات قرحة', c:'--ok', cbg:'--ok-bg',
+    meaning:'لم تظهر في الصورة علامات قرحة أو جرح. استمر في العناية الوقائية بالقدم، خصوصًا لمرضى السكري.',
+    todo:['افحص قدميك يوميًا، بما في ذلك بين الأصابع وتحت القدم.','رطّب الجلد، وتجنّب وضع المرطب بين الأصابع.','ارتدِ حذاءً مريحًا ومناسبًا، ولا تمشِ حافيًا.','اعمل فحصًا دوريًا للقدم عند الطبيب مرة في السنة على الأقل لمرضى السكري.'],
+    docTitle:'متابعة دورية', docText:'لا تحتاج النتيجة مراجعة عاجلة. إذا لاحظت أي جرح جديد أو تغير في لون القدم، أعد الفحص وراجع الطبيب.'},
+};
+function parse() {
+  const m = (location.hash || '').match(/^#([DVSN])(\d{2,3})$/);
+  if (!m) return null;
+  const p = Math.min(100, Math.max(0, parseInt(m[2], 10)));
+  return { k: m[1], p };
+}
+function render() {
+  let r = parse(), example = false;
+  if (!r) { r = { k: 'D', p: 96 }; example = true; }
+  const d = DATA[r.k], root = document.documentElement.style;
+  const css = getComputedStyle(document.documentElement);
+  const app = document.getElementById('app');
+  app.style.setProperty('--c', `var(${d.c})`);
+  app.style.setProperty('--cbg', `var(${d.cbg})`);
+  document.getElementById('example').hidden = !example;
+  document.getElementById('name').textContent = d.name;
+  document.getElementById('code').textContent = d.code;
+  document.getElementById('prio').textContent = d.prio;
+  document.getElementById('pct').textContent = AR(r.p) + '٪';
+  document.getElementById('bar').style.width = r.p + '%';
+  document.getElementById('meaning').textContent = d.meaning;
+  const ol = document.getElementById('todo'); ol.innerHTML = '';
+  d.todo.forEach(t => { const li = document.createElement('li'); li.textContent = t; ol.appendChild(li); });
+  document.getElementById('docTitle').textContent = d.docTitle;
+  document.getElementById('docText').textContent = d.docText;
+  const now = new Date();
+  document.getElementById('when').textContent = 'تاريخ فتح التقرير: ' + now.toLocaleDateString('ar-SA-u-ca-gregory-nu-arab', { year:'numeric', month:'long', day:'numeric' });
+  const url = location.href.split('#')[0] + '#' + r.k + r.p;
+  const msg = `تقرير VisionFoot (فحص أولي): ${d.name} (${d.code})، نسبة الثقة ${AR(r.p)}٪. ${d.prio}.\n${url}`;
+  document.getElementById('wa').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
+  const link = document.getElementById('link'); link.value = url;
+  document.getElementById('copy').onclick = async () => {
+    try { await navigator.clipboard.writeText(url); document.getElementById('copy').textContent = 'تم نسخ الرابط'; }
+    catch (e) { link.hidden = false; link.focus(); link.select(); }
+  };
+}
+window.addEventListener('hashchange', render);
+render();
+</script>
+
+</body>
+</html>
